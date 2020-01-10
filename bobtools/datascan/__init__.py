@@ -1,1 +1,3 @@
-from bobtools.datascan._dictscanner import DictScanner  # noqa
+from bobtools.datascan._dictscanner import DictScanner
+
+__all__ = [DictScanner]
