@@ -87,7 +87,9 @@ class JSONL:
     def deserialize_line(
         self, line: Union[str, bytes]
     ) -> Union[dict, str, int, float, list, tuple]:
-        """Deserialize to a object from a JSON (byte-)string, ignoring errors if so configured"""
+        """Deserialize to a object from a JSON (byte-)string,
+         ignoring errors if so configured.
+        """
         try:
             if type(line) == str:
                 return json.loads(line)
@@ -138,7 +140,7 @@ class JSONL:
 
     def read(self) -> list:
         """Read all lines in a file and returns the contained objects as a list.
-        
+
         Note:
             - re-opens file if file is closed
             - closes file after reading (as the end of the buffer is reached)
@@ -161,7 +163,7 @@ class JSONL:
         self,
     ) -> Generator[Union[dict, str, int, float, list, tuple], None, None]:
         """Yield objects from file one-by-one
-        
+
         Note:
             - re-opens file if file is closed
             - closes file after reading (as the end of the buffer is reached)
