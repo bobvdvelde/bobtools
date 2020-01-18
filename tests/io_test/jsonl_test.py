@@ -36,7 +36,7 @@ class JSONLTest(unittest.TestCase):
             os.remove(filename)
         JSONL.__repr__ = unittest.mock.Mock(return_value="repr_test")
         jsonl = JSONL(filename, print_on_exit=True)
-        with jsonl as f:
+        with jsonl:
             pass
         self.assertTrue(jsonl.closed())
 
