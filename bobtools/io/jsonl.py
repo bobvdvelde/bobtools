@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import gzip
-from typing import Any, Generator, Iterable, Union
+from typing import Generator, Iterable, Union
 
 OPENERS = {
     "gzip": {"object": gzip.GzipFile, "read_mode": "rb+", "append_mode": "ab+"},
@@ -73,8 +73,9 @@ class JSONL:
     def close(self):
         self._fileobj.close()
 
-    @staticmethod
-    def serialize_to_line(object: Union[dict, str, int, float, list, tuple]) -> str:
+    def serialize_to_line(
+        self, object: Union[dict, str, int, float, list, tuple]
+    ) -> str:
         """Serialize an object to a JSON string, ignoring errors if so configured"""
         try:
             return json.dumps(object)
@@ -83,9 +84,8 @@ class JSONL:
                 return
             raise e
 
-    @staticmethod
     def deserialize_line(
-        line: Union[str, bytes]
+        self, line: Union[str, bytes]
     ) -> Union[dict, str, int, float, list, tuple]:
         """Deserialize to a object from a JSON (byte-)string, ignoring errors if so configured"""
         try:
@@ -127,7 +127,7 @@ class JSONL:
 
     def read_line(self) -> Union[dict, str, int, float, list, tuple]:
         if self.closed():
-            logger.critical(
+            logging.critical(
                 "Unable to read, file was closed (possibly because end was reached)"
             )
             return
