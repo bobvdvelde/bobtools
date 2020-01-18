@@ -2,10 +2,11 @@ import os
 import unittest
 import unittest.mock
 
+
 class JSONLTest(unittest.TestCase):
-    
     def test_instantiation(self):
         from bobtools.io import JSONL
+
         filename = "test_tmpfile"
         if os.path.exists(filename):
             os.remove(filename)
@@ -16,6 +17,7 @@ class JSONLTest(unittest.TestCase):
 
     def test_closing(self):
         from bobtools.io import JSONL
+
         filename = "test_tmpfile"
         if os.path.exists(filename):
             os.remove(filename)
@@ -28,22 +30,24 @@ class JSONLTest(unittest.TestCase):
 
     def test_print_on_exit(self):
         from bobtools.io import JSONL
+
         filename = "test_tmpfile"
         if os.path.exists(filename):
             os.remove(filename)
         JSONL.__repr__ = unittest.mock.Mock(return_value="repr_test")
         jsonl = JSONL(filename, print_on_exit=True)
         with jsonl as f:
-            pass 
+            pass
         self.assertTrue(jsonl.closed())
 
     def test_write_and_read(self):
         from bobtools.io import JSONL
+
         filename = "test_tmpfile"
         if os.path.exists(filename):
             os.remove(filename)
 
-        data = ["string", 1, {"a":"b"}, [1,2], 1.2]
+        data = ["string", 1, {"a": "b"}, [1, 2], 1.2]
 
         jsonl_writer = JSONL(filename)
         jsonl_writer.extend(data)
