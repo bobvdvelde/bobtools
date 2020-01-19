@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="bobtools",
@@ -9,6 +9,6 @@ setup(
     author="Bob van de Velde",
     author_email="bobtools@rnvdv.com",
     url="tba",
-    packages=["bobtools.bobtools", ],
+    packages=find_packages("bobtools"),
     install_requires=["requests", "pandas", "cloudpickle"],
 )
