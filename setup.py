@@ -9,6 +9,6 @@ setup(
     author="Bob van de Velde",
     author_email="bobtools@rnvdv.com",
     url="tba",
-    packages=find_packages("bobtools"),
+    packages=find_packages(),
     install_requires=["requests", "pandas", "cloudpickle"],
 )
