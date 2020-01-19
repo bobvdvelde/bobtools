@@ -9,7 +9,6 @@ setup(
     author="Bob van de Velde",
     author_email="bobtools@rnvdv.com",
     url="tba",
-    package_dir={"": "bobtools"},
     packages=["bobtools"],
     install_requires=["requests", "pandas", "cloudpickle"],
 )
