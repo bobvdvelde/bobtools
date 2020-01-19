@@ -9,6 +9,6 @@ setup(
     author="Bob van de Velde",
     author_email="bobtools@rnvdv.com",
     url="tba",
-    packages=["io","parallel","datascan"],
+    packages=["bobtools","bobtools.io", "bobtools.parallel","bobtools.datascan"],
     install_requires=["requests", "pandas", "cloudpickle"],
 )
