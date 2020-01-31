@@ -1,3 +1,4 @@
+import atexit
 import json
 import logging
 import os
@@ -6,6 +7,7 @@ from typing import Generator, Iterable, Union
 
 OPENERS = {
     "gzip": {"object": gzip.GzipFile, "read_mode": "rb+", "append_mode": "ab+"},
+    "gz": {"object": gzip.GzipFile, "read_mode": "rb+", "append_mode": "ab+"},
     "default": {"object": open, "read_mode": "r+", "append_mode": "a+"},
 }
 
@@ -30,10 +32,11 @@ class JSONL:
         self.print_on_exit = print_on_exit
         self.filename = filename
         # inferred attributes
-        self.extension = filename.rsplit(".", 1) if "." in filename else "JSONL"
+        self.extension = filename.rsplit(".", 1)[1] if "." in filename else "JSONL"
         self.opener = OPENERS.get(self.extension, OPENERS.get("default"))
         self.new = not self.exists()
         self.open()
+        atexit.register(self.__exit__)
 
     def open(self, for_read: bool = False):
         """(Re)-opens file """
@@ -64,6 +67,9 @@ class JSONL:
 
     def __enter__(self):
         return self
+
+    def __del__(self):
+        self.__exit__()
 
     def __exit__(self, type=None, value=None, traceback=None):
         self._fileobj.close()
@@ -117,7 +123,12 @@ class JSONL:
         if not line:
             return
         self.written += 1
-        self._fileobj.write(line)
+        if self.opener["append_mode"] in ["ab", "ab+"]:
+            self._fileobj.write(line.encode())
+        elif self.opener["append_mode"] in ["a", "a+"]:
+            self._fileobj.write(line)
+        else:
+            raise NotImplementedError(f"Unsupported append mode")
 
     def extend(
         self, object_iterable: Iterable[Union[dict, str, int, float, list, tuple]]
