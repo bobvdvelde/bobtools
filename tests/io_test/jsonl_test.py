@@ -59,6 +59,44 @@ class JSONLTest(unittest.TestCase):
 
         os.remove(filename)
 
+    def test_write_and_read_gzip(self):
+        from bobtools.io import JSONL
+
+        filename = "test_tmpfile.gzip"
+        if os.path.exists(filename):
+            os.remove(filename)
+
+        data = ["string", 1, {"a": "b"}, [1, 2], 1.2]
+
+        jsonl_writer = JSONL(filename)
+        jsonl_writer.extend(data)
+        jsonl_writer.close()
+        jsonl_reader = JSONL(filename)
+        read_data = jsonl_reader.read()
+
+        self.assertEqual(data, read_data)
+
+        os.remove(filename)
+
+    def test_write_and_read_gzip_double_extension(self):
+        from bobtools.io import JSONL
+
+        filename = "test_tmpfile.jsonl.gzip"
+        if os.path.exists(filename):
+            os.remove(filename)
+
+        data = ["string", 1, {"a": "b"}, [1, 2], 1.2]
+
+        jsonl_writer = JSONL(filename)
+        jsonl_writer.extend(data)
+        jsonl_writer.close()
+        jsonl_reader = JSONL(filename)
+        read_data = jsonl_reader.read()
+
+        self.assertEqual(data, read_data)
+
+        os.remove(filename)
+
 
 if __name__ == "__main__":
     unittest.main()
