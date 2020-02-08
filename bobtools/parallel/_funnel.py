@@ -80,15 +80,15 @@ def funnel(
     """Fan-in multiprocessing utility function
 
     The 'funnel' generator is meant for 'fan-in' multiprocessing, where an
-    iterable of data is processed in parallel by `n_workers` and passed to 
+    iterable of data is processed in parallel by `n_workers` and passed to
     a single-thread post-processing worker. For example: Downloading many
-    sites in parallel and writing them to a single file. 
+    sites in parallel and writing them to a single file.
 
     Parameters
     ---
     iterable : Iterable
         An iterable of data, such as a list or generator. Items in the iterable
-        are individually pickled and passed to the workers to apply the `multi_func` 
+        are individually pickled and passed to the workers to apply the `multi_func`
         stage
 
     multi_func : Callable
