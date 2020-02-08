@@ -79,6 +79,34 @@ class funnelTest(unittest.TestCase):
             ValueError, funnel(data, multi_func, single_func, n_workers=1).__next__
         )
 
+    def test_dict_values(self):
+        from bobtools.parallel import funnel
+
+        data = [{"id": 1}, {"id": 2}]
+
+        def datagen():
+            for i in data:
+                yield (i,)
+
+        def multi_func(thing):
+            thing["id"] += 1
+            print(thing)
+            return (thing,)
+
+        class Toucher:
+            n_touched = 0
+            id_sum = 0
+
+            def touch(self, thing):
+                self.n_touched += 1
+                self.id_sum += thing["id"]
+                return self.id_sum
+
+        toucher = Toucher()
+
+        res = list(funnel(datagen(), multi_func, toucher.touch))
+        self.assertEqual(res[-1], sum([thing["id"] + 1 for thing in data]))
+
 
 if __name__ == "__main__":
     unittest.main()
