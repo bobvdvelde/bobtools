@@ -77,7 +77,38 @@ def funnel(
     n_workers=3,
     concurrent_tasks=(100, 100, 100),
 ):
-    # TODO: Document!
+    """Fan-in multiprocessing utility function
+
+    The 'funnel' generator is meant for 'fan-in' multiprocessing, where an
+    iterable of data is processed in parallel by `n_workers` and passed to 
+    a single-thread post-processing worker. For example: Downloading many
+    sites in parallel and writing them to a single file. 
+
+    Parameters
+    ---
+    iterable : Iterable
+        An iterable of data, such as a list or generator. Items in the iterable
+        are individually pickled and passed to the workers to apply the `multi_func` 
+        stage
+
+    multi_func : Callable
+        A function or method that can be applied to any item from the iterable. NOTE:
+        a tuple passed to the multi-func will be considered as positional
+        arguments (*args), a dictionary passed to the multi func will be considered
+        keyword arguments (**kwargs).  Avoid unwanted unpacking by passing
+        dictionaries or tuples that should not be interpreted
+        as arguments wrapped in a tuple, e.g. ({"my_dict":"is not a set of kwargs},)
+
+    single_func : Callable (default None)
+        A function that should NOT process the results of the multi_func in parallel,
+        but individually in the same thread. Will simply pass through `multi_func`
+        results when set to None.
+        NOTE: a tuple passed BY the multi-func will be considered as positional
+        arguments (*args), a dictionary passed BY the multi func will be considered
+        keyword arguments (**kwargs).  Avoid unwanted unpacking by passing
+        dictionaries or tuples that should not be interpreted
+        as arguments wrapped in a tuple, e.g. ({"my_dict":"is not a set of kwargs},)
+    """
 
     # Sanity check
     if n_workers < 2:
