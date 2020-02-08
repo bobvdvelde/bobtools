@@ -97,7 +97,6 @@ class JSONLTest(unittest.TestCase):
 
         os.remove(filename)
 
-
     def test_append_and_readline(self):
         from bobtools.io import JSONL
 
