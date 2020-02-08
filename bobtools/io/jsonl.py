@@ -1,8 +1,8 @@
 import atexit
+import gzip
 import json
 import logging
 import os
-import gzip
 from typing import Generator, Iterable, Union
 
 OPENERS = {
