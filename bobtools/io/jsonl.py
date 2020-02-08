@@ -138,14 +138,14 @@ class JSONL:
         for obj in object_iterable:
             self.append(obj)
 
-    def read_line(self) -> Union[dict, str, int, float, list, tuple]:
+    def readline(self) -> Union[dict, str, int, float, list, tuple]:
         if self.closed():
             logging.critical(
                 "Unable to read, file was closed (possibly because end was reached)"
             )
             return
         self._assure_readmode()
-        line = self._fileobj.read_line()
+        line = self._fileobj.readline()
         self.n_read += 1
         return self.deserialize_line(line)
 
