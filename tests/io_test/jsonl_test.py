@@ -98,5 +98,36 @@ class JSONLTest(unittest.TestCase):
         os.remove(filename)
 
 
+    def test_append_and_readline(self):
+        from bobtools.io import JSONL
+
+        filename = "test_tmpfile.jsonl"
+        if os.path.exists(filename):
+            os.remove(filename)
+
+        data = {"hey": "whay about this", "1": 1, "float": 0.1}
+
+        jsonl_writer = JSONL(filename)
+        jsonl_writer.append(data)
+
+        self.assertEqual(jsonl_writer.readline(), data)
+        os.remove(filename)
+
+    def test_append_and_readline_gzip(self):
+        from bobtools.io import JSONL
+
+        filename = "test_tmpfile.jsonl.gzip"
+        if os.path.exists(filename):
+            os.remove(filename)
+
+        data = {"hey": "whay about this", "1": 1, "float": 0.1}
+
+        jsonl_writer = JSONL(filename)
+        jsonl_writer.append(data)
+
+        self.assertEqual(jsonl_writer.readline(), data)
+        os.remove(filename)
+
+
 if __name__ == "__main__":
     unittest.main()
