@@ -65,6 +65,11 @@ class dictScannerTests(unittest.TestCase):
         self.assertEqual(ds.to_prototype(), expected_prototype)
         self.assertEqual(ds.to_schema(), expected_schema)
 
+    def test_initialization_with_data(self):
+        data = [{"a": {"d": 1, "e": 2}, "b": "3", "c": "4"}]
+        ds = DictScanner(data)
+        expected = {"a": {"d": type(1), "e": type(2)}, "b": type("3"), "c": type("4")}
+        self.assertEqual(ds.to_schema(), expected)
 
 if __name__ == "__main__":
     unittest.main()
