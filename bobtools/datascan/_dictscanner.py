@@ -1,6 +1,6 @@
 import logging
 from copy import deepcopy
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, InitVar
 from typing import Callable, Dict, Iterable
 
 leaf = {"types": [], "prototype": None, "values": [], "count": 0}
@@ -8,9 +8,15 @@ leaf = {"types": [], "prototype": None, "values": [], "count": 0}
 
 @dataclass
 class DictScanner:
-    iterable: Iterable = field(default_factory=lambda: [])
+    iterable: InitVar[Iterable] = None
     n_scanned: int = 0
     root: dict = field(default_factory=lambda: {})
+
+    def __post_init__(self, iterable: Iterable) -> None:
+        if iterable:
+            self.iterable = []
+            self.scan_all(iterable)
+        self.iterable = []
 
     def scan_all(self, iterable: Iterable) -> None:
         for i in iterable:
