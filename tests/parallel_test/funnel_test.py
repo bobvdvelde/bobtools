@@ -35,7 +35,7 @@ class funnelTest(unittest.TestCase):
         data = range(10)
         parallel_func = lambda x: x * 2  # noqa
 
-        res = list(funnel(data, parallel_func))
+        res = list(funnel(data, parallel_func, timeout=10))
 
         self.assertEqual(len(res), 10)
 
@@ -52,7 +52,7 @@ class funnelTest(unittest.TestCase):
 
         res = list(funnel(with_positional(), parallel_func, single_func))
         expected = [i * 2 / 3 for i in range(10)]
-        self.assertEqual(sum(res), sum(expected))
+        self.assertAlmostEqual(sum(res), sum(expected))
         self.assertEqual(len(res), len(expected))
 
     def test_named_arguments(self):
