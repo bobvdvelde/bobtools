@@ -1,6 +1,6 @@
 import logging
 from copy import deepcopy
-from dataclasses import dataclass, field, InitVar
+from dataclasses import InitVar, dataclass, field
 from typing import Callable, Dict, Iterable
 
 leaf = {"types": [], "prototype": None, "values": [], "count": 0}
