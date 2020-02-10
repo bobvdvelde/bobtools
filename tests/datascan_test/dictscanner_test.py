@@ -71,5 +71,6 @@ class dictScannerTests(unittest.TestCase):
         expected = {"a": {"d": type(1), "e": type(2)}, "b": type("3"), "c": type("4")}
         self.assertEqual(ds.to_schema(), expected)
 
+
 if __name__ == "__main__":
     unittest.main()
