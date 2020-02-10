@@ -76,6 +76,7 @@ def funnel(
     single_func=None,
     n_workers=3,
     concurrent_tasks=(100, 100, 100),
+    timeout=None,
 ):
     """Fan-in multiprocessing utility function
 
@@ -108,6 +109,8 @@ def funnel(
         keyword arguments (**kwargs).  Avoid unwanted unpacking by passing
         dictionaries or tuples that should not be interpreted
         as arguments wrapped in a tuple, e.g. ({"my_dict":"is not a set of kwargs},)
+    timeout : int
+        How long to wait for jobs to finish
     """
 
     # Sanity check
@@ -150,8 +153,9 @@ def funnel(
         multi_func_queue.join()
         single_func_queue.put(None)
         single_func_queue.join()
+
         while True:
-            result = output_queue.get(30)
+            result = output_queue.get(timeout=30)
             if isinstance(result, type(None)):
                 break
             yield result
