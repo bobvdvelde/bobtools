@@ -40,16 +40,20 @@ class _SingleWorker(multiprocessing.Process):
         self.task_queue = task_queue
         self.result_queue = result_queue
         self.func = cloudpickle.loads(func) if func else None
+        self.stop = False
         logging.info(f"{self.name} : Started")
 
     def run(self):
         while True:
             task = self.task_queue.get()
-            if task is None:
-                logging.info(f"{self.name} is exiting")
-                self.task_queue.task_done()
-                self.result_queue.put(None)
-                break
+            if task is None or self.stop:
+                if self.task_queue.empty():
+                    logging.info(f"{self.name} is exiting")
+                    self.task_queue.task_done()
+                    self.result_queue.put(None)
+                    break
+                self.stop = True
+                continue
             logging.info(f"{self.name} called on {task}")
 
             if not self.func:
@@ -151,25 +155,31 @@ def funnel(
                 yield output_queue.get_nowait()
             multi_func_queue.put(i)
 
+        logging.debug("Submitting multi-func kill signal")
         for i in range(n_workers - 1):
             multi_func_queue.put(None)
 
         multi_func_queue.join()
+        for w in multi_workers:
+            w.join()
+        logging.debug("Submitting single-func kill signal")
+
         single_func_queue.put(None)
         single_func_queue.join()
 
         while True:
-            result = output_queue.get(timeout=30)
+            result = output_queue.get()
             if isinstance(result, type(None)):
                 break
             yield result
 
     finally:
+        pass
 
-        # cleanup
-        for w in multi_workers:
-            w.terminate()
-        single_worker.terminate()
-        multi_func_queue.close()
-        single_func_queue.close()
-        output_queue.close()
+    # cleanup
+    for w in multi_workers:
+        w.terminate()
+    single_worker.terminate()
+    multi_func_queue.close()
+    single_func_queue.close()
+    output_queue.close()
