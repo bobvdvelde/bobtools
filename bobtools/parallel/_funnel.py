@@ -116,10 +116,6 @@ def funnel(
     timeout : int
         How long to wait for jobs to finish
     """
-    logging.warning(
-        "Funnel is EXPERIMENTAL and is not assured to run correctly in any environment."
-        " DO NOT USE IN PRODUCTION"
-    )
 
     # Sanity check
     if n_workers < 2:
