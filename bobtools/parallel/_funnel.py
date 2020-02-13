@@ -155,27 +155,29 @@ def funnel(
         for i in range(n_workers - 1):
             multi_func_queue.put(None)
 
-        multi_func_queue.join()
-        for w in multi_workers:
-            w.join()
-        logging.debug("Submitting single-func kill signal")
-
-        single_func_queue.put(None)
-        single_func_queue.join()
-
+        single_stop_submitted = False
         while True:
-            result = output_queue.get()
-            if isinstance(result, type(None)):
+            if not output_queue.empty():
+                result = output_queue.get()
+                # if none, we've reached the end of processing
+                if isinstance(result, type(None)):
+                    break
+                yield result
+            # check if the multi_func workers are still working
+            alive_workers = [w for w in multi_workers if w.is_alive()]
+            if not alive_workers and not single_stop_submitted:
+                logging.debug("Submitting single-func kill signal")
+                single_func_queue.put(None)
+                single_stop_submitted = True
+            if not single_worker.is_alive():
                 break
-            yield result
 
     finally:
-        pass
 
-    # cleanup
-    for w in multi_workers:
-        w.terminate()
-    single_worker.terminate()
-    multi_func_queue.close()
-    single_func_queue.close()
-    output_queue.close()
+        # cleanup
+        for w in multi_workers:
+            w.terminate()
+        single_worker.terminate()
+        multi_func_queue.close()
+        single_func_queue.close()
+        output_queue.close()
