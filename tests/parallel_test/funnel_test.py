@@ -13,7 +13,7 @@ class funnelTest(unittest.TestCase):
         res = list(funnel(data, paralel_func, single_func))
 
         self.assertEqual(len(res), len(range(10)))
-        self.assertEqual(sum(res), sum(range(10)))
+        self.assertAlmostEqual(sum(res), sum(range(10)))
 
     def test_single_without_output(self):
         def gen():
