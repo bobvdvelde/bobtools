@@ -51,7 +51,7 @@ class funnelTest(unittest.TestCase):
         single_func = lambda x, y: x / y  # noqa
 
         res = list(funnel(with_positional(), parallel_func, single_func))
-        expected = [i * 2 / 3 for i in range(10)]
+        expected = [(i * 2) / 3 for i in range(10)]
         self.assertAlmostEqual(sum(res), sum(expected))
         self.assertEqual(len(res), len(expected))
 
